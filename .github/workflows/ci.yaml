@@ -54,10 +54,17 @@ jobs:
         run: |
           make "${{ matrix.target }}"
 
+      - name: Generage artifact name
+        id: artifact
+        run: |
+          # slugify the target name
+          artifact_name=$(echo "${{ matrix.target }}" | sed -e 's/[^[:alnum:]]/-/g' | tr -s '-' | tr A-Z a-z)
+          echo "name=${artifact_name}" >>"$GITHUB_OUTPUT"
+
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.target }}
+          name: ${{ steps.artifact.outputs.name }}
           path: |
             ${{ matrix.target }}
             ${{ matrix.target }}.*
