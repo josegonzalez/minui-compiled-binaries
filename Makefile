@@ -25,7 +25,7 @@ list:
 bin:
 	mkdir -p bin
 
-bin/coreutils:
+bin/coreutils: bin
 	curl -sSL -o bin/coreutils.tar.gz "https://github.com/uutils/coreutils/releases/download/$(COREUTILS_VERSION)/coreutils-$(COREUTILS_VERSION)-aarch64-unknown-linux-gnu.tar.gz"
 	tar -xzf bin/coreutils.tar.gz -C bin --strip-components=1
 	rm bin/coreutils.tar.gz
@@ -34,7 +34,7 @@ bin/coreutils:
 	rm bin/README.md bin/README.package.md || true
 	echo $(COREUTILS_VERSION) > bin/coreutils.version
 
-bin/dropbear:
+bin/dropbear: bin
 	docker buildx build --platform linux/arm64 --load -f Dockerfile.dropbear --progress plain -t app/dropbear:latest --build-arg VERSION=$(DROPBEAR_VERSION) .
 	docker container create --name dropbear-extract app/dropbear:latest
 	docker container cp dropbear-extract:/go/src/github.com/mkj/dropbear/dropbear bin/dropbear
@@ -42,14 +42,14 @@ bin/dropbear:
 	chmod +x bin/dropbear
 	echo $(DROPBEAR_VERSION) > bin/dropbear.version
 
-bin/dufs:
+bin/dufs: bin
 	curl -sSL -o bin/dufs.tar.gz "https://github.com/sigoden/dufs/releases/download/v$(DUFS_VERSION)/dufs-v$(DUFS_VERSION)-aarch64-unknown-linux-musl.tar.gz"
 	tar -xzf bin/dufs.tar.gz -C bin
 	rm bin/dufs.tar.gz
 	chmod +x bin/dufs
 	echo $(DUFS_VERSION) > bin/dufs.version
 
-bin/evtest:
+bin/evtest: bin
 	docker buildx build --platform linux/arm64 --load -f Dockerfile.evtest --progress plain -t app/evtest:latest --build-arg VERSION=$(EVTEST_VERSION) .
 	docker container create --name evtest-extract app/evtest:latest
 	docker container cp evtest-extract:/go/src/github.com/freedesktop/evtest/evtest bin/evtest
@@ -57,14 +57,14 @@ bin/evtest:
 	chmod +x bin/evtest
 	echo $(EVTEST_VERSION) > bin/evtest.version
 
-bin/remote-term:
+bin/remote-term: bin
 	docker buildx build --platform linux/arm64 --load -f Dockerfile.remote-term --progress plain -t app/remote-term:latest .
 	docker container create --name remote-term-extract app/remote-term:latest
 	docker container cp remote-term-extract:/go/src/github.com/josegonzalez/go-remote-term/remote-term bin/remote-term
 	docker container rm remote-term-extract
 	chmod +x bin/remote-term
 
-bin/sdl2imgshow:
+bin/sdl2imgshow: bin
 	docker buildx build --platform linux/arm64 --load -f Dockerfile.sdl2imgshow --progress plain -t app/sdl2imgshow:latest --build-arg VERSION=$(SDL2IMGSHOW_VERSION) .
 	docker container create --name sdl2imgshow-extract app/sdl2imgshow:latest
 	docker container cp sdl2imgshow-extract:/go/src/github.com/kloptops/sdl2imgshow/build/sdl2imgshow bin/sdl2imgshow
@@ -72,7 +72,7 @@ bin/sdl2imgshow:
 	chmod +x bin/sdl2imgshow
 	echo $(SDL2IMGSHOW_VERSION) > bin/sdl2imgshow.version
 
-bin/sftpgo:
+bin/sftpgo: bin
 	docker buildx build --platform linux/arm64 --load -f Dockerfile.sftpgo --progress plain -t app/sftpgo:latest --build-arg VERSION=$(SFTPGO_VERSION) .
 	docker container create --name sftpgo-extract app/sftpgo:latest
 	docker container cp sftpgo-extract:/go/src/github.com/drakkan/sftpgo/sftpgo bin/sftpgo
@@ -80,7 +80,7 @@ bin/sftpgo:
 	chmod +x bin/sftpgo
 	echo $(SFTPGO_VERSION) > bin/sftpgo.version
 
-bin/termsp:
+bin/termsp: bin
 	docker buildx build --platform linux/arm64 --load -f Dockerfile.termsp --progress plain -t app/termsp:latest --build-arg VERSION=$(TERMSP_VERSION) .
 	docker container create --name termsp-extract app/termsp:latest
 	docker container cp termsp-extract:/go/src/github.com/Nevrdid/TermSP/build/TermSP bin/termsp
