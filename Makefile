@@ -11,12 +11,13 @@ clean:
 	rm -rf bin/dropbear
 	rm -rf bin/dufs
 	rm -rf bin/evtest
+	rm -rf bin/jq
 	rm -rf bin/remote-term
 	rm -rf bin/sdl2imgshow
 	rm -rf bin/sftpgo
 	rm -rf bin/termsp
 
-build: bin bin/coreutils bin/dropbear bin/dufs bin/evtest bin/remote-term bin/sdl2imgshow bin/sftpgo bin/termsp
+build: bin bin/coreutils bin/dropbear bin/dufs bin/evtest bin/jq bin/remote-term bin/sdl2imgshow bin/sftpgo bin/termsp
 
 .PHONY: list
 list:
@@ -56,6 +57,10 @@ bin/evtest: bin
 	docker container rm evtest-extract
 	chmod +x bin/evtest
 	echo $(EVTEST_VERSION) > bin/evtest.version
+
+bin/jq:
+	curl -o bin/jq -sSL https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-linux-arm64
+	chmod +x bin/jq
 
 bin/remote-term: bin
 	docker buildx build --platform linux/arm64 --load -f Dockerfile.remote-term --progress plain -t app/remote-term:latest .
