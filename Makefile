@@ -1,7 +1,9 @@
+BASH_VERSION := 5.2.015-1.2.3-2
 COREUTILS_VERSION := 0.0.28
 DROPBEAR_VERSION := 2024.86
 DUFS_VERSION := 0.43.0
 EVTEST_VERSION := 1.35
+JQ_VERSION := 1.7.1
 SDL2IMGSHOW_VERSION := 2d0120f396f881331a4bc77ba5f77c46d8325b19
 SFTPGO_VERSION := 2.6.4
 TERMSP_VERSION := 5116aeda84b8d4bb125a214464c131c177260140
@@ -28,8 +30,9 @@ bin:
 	mkdir -p bin
 
 bin/bash:
-	curl -o bin/bash -sSL "https://github.com/robxu9/bash-static/releases/download/5.2.015-1.2.3-2/bash-linux-aarch64"
+	curl -o bin/bash -sSL "https://github.com/robxu9/bash-static/releases/download/$(BASH_VERSION)/bash-linux-aarch64"
 	chmod +x bin/bash
+	echo $(BASH_VERSION) > bin/bash.version
 
 bin/coreutils: bin
 	curl -sSL -o bin/coreutils.tar.gz "https://github.com/uutils/coreutils/releases/download/$(COREUTILS_VERSION)/coreutils-$(COREUTILS_VERSION)-aarch64-unknown-linux-gnu.tar.gz"
@@ -64,8 +67,9 @@ bin/evtest: bin
 	echo $(EVTEST_VERSION) > bin/evtest.version
 
 bin/jq: bin
-	curl -o bin/jq -sSL https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-linux-arm64
+	curl -o bin/jq -sSL https://github.com/jqlang/jq/releases/download/jq-$(JQ_VERSION)/jq-linux-arm64
 	chmod +x bin/jq
+	echo $(JQ_VERSION) > bin/jq.version
 
 bin/remote-term: bin
 	docker buildx build --platform linux/arm64 --load -f Dockerfile.remote-term --progress plain -t app/remote-term:latest .
@@ -73,6 +77,7 @@ bin/remote-term: bin
 	docker container cp remote-term-extract:/go/src/github.com/josegonzalez/go-remote-term/remote-term bin/remote-term
 	docker container rm remote-term-extract
 	chmod +x bin/remote-term
+	echo "latest" > bin/remote-term.version
 
 bin/sdl2imgshow: bin
 	docker buildx build --platform linux/arm64 --load -f Dockerfile.sdl2imgshow --progress plain -t app/sdl2imgshow:latest --build-arg VERSION=$(SDL2IMGSHOW_VERSION) .
