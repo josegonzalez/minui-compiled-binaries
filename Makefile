@@ -29,7 +29,7 @@ list:
 bin:
 	mkdir -p bin
 
-bin/bash:
+bin/bash: bin
 	curl -o bin/bash -sSL "https://github.com/robxu9/bash-static/releases/download/$(BASH_VERSION)/bash-linux-aarch64"
 	chmod +x bin/bash
 	echo $(BASH_VERSION) > bin/bash.version
