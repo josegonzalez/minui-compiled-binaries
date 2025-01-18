@@ -7,6 +7,7 @@ SFTPGO_VERSION := 2.6.4
 TERMSP_VERSION := 5116aeda84b8d4bb125a214464c131c177260140
 
 clean:
+	rm -rf bin/bash
 	rm -rf bin/coreutils
 	rm -rf bin/dropbear
 	rm -rf bin/dufs
@@ -17,7 +18,7 @@ clean:
 	rm -rf bin/sftpgo
 	rm -rf bin/termsp
 
-build: bin bin/coreutils bin/dropbear bin/dufs bin/evtest bin/jq bin/remote-term bin/sdl2imgshow bin/sftpgo bin/termsp
+build: bin bin/bash bin/coreutils bin/dropbear bin/dufs bin/evtest bin/jq bin/remote-term bin/sdl2imgshow bin/sftpgo bin/termsp
 
 .PHONY: list
 list:
@@ -25,6 +26,10 @@ list:
 
 bin:
 	mkdir -p bin
+
+bin/bash:
+	curl -o bin/bash -sSL "https://github.com/robxu9/bash-static/releases/download/5.2.015-1.2.3-2/bash-linux-aarch64"
+	chmod +x bin/bash
 
 bin/coreutils: bin
 	curl -sSL -o bin/coreutils.tar.gz "https://github.com/uutils/coreutils/releases/download/$(COREUTILS_VERSION)/coreutils-$(COREUTILS_VERSION)-aarch64-unknown-linux-gnu.tar.gz"
@@ -58,7 +63,7 @@ bin/evtest: bin
 	chmod +x bin/evtest
 	echo $(EVTEST_VERSION) > bin/evtest.version
 
-bin/jq:
+bin/jq: bin
 	curl -o bin/jq -sSL https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-linux-arm64
 	chmod +x bin/jq
 
