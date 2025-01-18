@@ -1,0 +1,26 @@
+FROM golang:1.20.5-buster
+
+# Global compilation environment
+ENV GOOS=linux
+ENV GOARCH=arm64
+ENV CGO_ENABLED=1
+ENV CROSS_COMPILE=aarch64-linux-gnu-
+ENV CC=aarch64-linux-gnu-gcc
+RUN apt-get update && apt-get install -y file
+
+# dropbear os dependencies
+RUN apt-get update && apt-get install -y autoconf zlib1g-dev
+
+ARG VERSION=2024.86
+ENV VERSION=$VERSION
+
+RUN git clone https://github.com/mkj/dropbear /go/src/github.com/mkj/dropbear && \
+    git -C /go/src/github.com/mkj/dropbear checkout "tags/DROPBEAR_$VERSION"
+
+WORKDIR /go/src/github.com/mkj/dropbear
+
+RUN ./configure --prefix=/usr --host=aarch64-linux-gnu
+RUN make PROGRAMS="dropbear dbclient dropbearkey dropbearconvert scp"
+
+RUN ls -lah /go/src/github.com/mkj/dropbear
+RUN file /go/src/github.com/mkj/dropbear/dropbear
