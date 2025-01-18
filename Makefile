@@ -52,7 +52,7 @@ bin/dufs: bin
 bin/evtest: bin
 	docker buildx build --platform linux/arm64 --load -f Dockerfile.evtest --progress plain -t app/evtest:latest --build-arg VERSION=$(EVTEST_VERSION) .
 	docker container create --name evtest-extract app/evtest:latest
-	docker container cp evtest-extract:/go/src/github.com/freedesktop/evtest/evtest bin/evtest
+	docker container cp evtest-extract:/go/src/gitlab.freedesktop.org/freedesktop/evtest/evtest bin/evtest
 	docker container rm evtest-extract
 	chmod +x bin/evtest
 	echo $(EVTEST_VERSION) > bin/evtest.version
