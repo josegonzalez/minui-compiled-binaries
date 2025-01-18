@@ -20,7 +20,7 @@ jobs:
     name: strategy
     runs-on: ubuntu-24.04
     outputs:
-      matrix: ${{ steps.matrix.outputs.matrix }}
+      targets: ${{ steps.matrix.outputs.targets }}
 
     steps:
       - name: Checkout
@@ -29,14 +29,15 @@ jobs:
       - name: Generate matrix
         id: matrix
         run: |
-          echo "matrix=$(make list | grep ^bin/ | jq -ncMR '[inputs | select(length>0)]')" >>"$GITHUB_OUTPUT"
+          echo "targets=$(make list | grep ^bin/ | jq -ncMR '[inputs | select(length>0)]')" >>"$GITHUB_OUTPUT"
 
   build:
     name: build.${{ matrix }}
     runs-on: ubuntu-24.04
     needs: strategy
     strategy:
-      matrix: ${{fromJson(needs.strategy.outputs.matrix)}}
+      matrix:
+        target: ${{fromJson(needs.strategy.outputs.targets)}}
 
     steps:
       - name: Checkout
