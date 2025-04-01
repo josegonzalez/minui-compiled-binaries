@@ -4,7 +4,6 @@ DROPBEAR_VERSION := 2024.86
 DUFS_VERSION := 0.43.0
 EVTEST_VERSION := 1.35
 JQ_VERSION := 1.7.1
-SDL2IMGSHOW_VERSION := 2d0120f396f881331a4bc77ba5f77c46d8325b19
 SFTPGO_VERSION := 2.6.4
 TERMSP_VERSION := 5116aeda84b8d4bb125a214464c131c177260140
 
@@ -16,11 +15,10 @@ clean:
 	rm -rf bin/evtest
 	rm -rf bin/jq
 	rm -rf bin/remote-term
-	rm -rf bin/sdl2imgshow
 	rm -rf bin/sftpgo
 	rm -rf bin/termsp
 
-build: bin bin/bash bin/coreutils bin/dropbear bin/dufs bin/evtest bin/jq bin/remote-term bin/sdl2imgshow bin/sftpgo bin/termsp
+build: bin bin/bash bin/coreutils bin/dropbear bin/dufs bin/evtest bin/jq bin/remote-term bin/sftpgo bin/termsp
 
 .PHONY: list
 list:
@@ -78,14 +76,6 @@ bin/remote-term: bin
 	docker container rm remote-term-extract
 	chmod +x bin/remote-term
 	echo "latest" > bin/remote-term.version
-
-bin/sdl2imgshow: bin
-	docker buildx build --platform linux/arm64 --load -f Dockerfile.sdl2imgshow --progress plain -t app/sdl2imgshow:latest --build-arg VERSION=$(SDL2IMGSHOW_VERSION) .
-	docker container create --name sdl2imgshow-extract app/sdl2imgshow:latest
-	docker container cp sdl2imgshow-extract:/go/src/github.com/kloptops/sdl2imgshow/build/sdl2imgshow bin/sdl2imgshow
-	docker container rm sdl2imgshow-extract
-	chmod +x bin/sdl2imgshow
-	echo $(SDL2IMGSHOW_VERSION) > bin/sdl2imgshow.version
 
 bin/sftpgo: bin
 	docker buildx build --platform linux/arm64 --load -f Dockerfile.sftpgo --progress plain -t app/sftpgo:latest --build-arg VERSION=$(SFTPGO_VERSION) .

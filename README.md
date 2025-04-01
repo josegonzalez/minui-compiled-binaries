@@ -13,7 +13,6 @@ Implemented
 - evtest: input device event monitor and query tool
 - jq: lightweight and flexible command-line JSON processor
 - remote-term: http server exposing a remote terminal in the web browser
-- sdl2imgshow: simple tool for showing an image with some text.
 - sftpgo: an event-driven file transfer solution supporting SFTP, SCP, FTP/S, WebDAV, HTTP/S
 - termsp: SDL2 terminal emulator based on libvterm and sdlfox
 
