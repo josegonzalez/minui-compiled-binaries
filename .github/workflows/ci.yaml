@@ -62,7 +62,7 @@ jobs:
           echo "name=${artifact_name}" >>"$GITHUB_OUTPUT"
 
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v5.0.0
+        uses: actions/upload-artifact@v6.0.0
         with:
           name: ${{ steps.artifact.outputs.name }}
           path: |
